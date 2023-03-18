@@ -1,6 +1,9 @@
 import fetch from "node-fetch";
 
-const exclude_channels_prefix = ['mjh-7-cas', 'mjh-abc-90-seconds'];
+const disableExclusions = process.env.DISABLE_EXCLUSIONS && String(process.env.DISABLE_EXCLUSIONS.toLowerCase) === 'true';
+const excludePrefixes = process.env.EXCLUDE_CHANNELS_PREFIXES ? process.env.EXCLUDE_CHANNELS_PREFIXES.split(',') : ['mjh-7-cas', 'mjh-abc-90-seconds'];
+
+const channelBlock = process.env.CHANNEL_NUMBER_BLOCK ? Number(process.env.CHANNEL_NUMBER_BLOCK) : null;
 
 interface M3u8Entry {
     url: string;
@@ -68,7 +71,6 @@ function parseM3u8(m3u8String: string): M3u8Entry[] {
 }
 
 function addChannelNumber(data: M3u8Entry[]): void {
-    let prefix = 1;
     const channelMap: Record<string, string> = {};
     let count = 1;
     let unknownChNumberCount = 1;
@@ -99,23 +101,39 @@ function addChannelNumber(data: M3u8Entry[]): void {
 
     knownChIdx.forEach(idx => {
         let entry = data[idx];
-        const chNum = prefix + String(entry['tvg-chno']).padStart(calculatedHighestChannelNumber.toString().length, '0');
-        entry.channel_number = chNum;
-        entry['tvg-chno'] = String(chNum);
+        
+        if (channelBlock) {
+            let blockLength = String(channelBlock).length;
+            if (blockLength < String(calculatedHighestChannelNumber).length) {
+                blockLength = String(calculatedHighestChannelNumber).length;
+            }
+
+            entry.channel_number = entry['tvg-chno'] = String(Number(String(entry['tvg-chno']).padStart(blockLength, '0')) + channelBlock);
+        } else {
+            entry.channel_number = entry['tvg-chno'];
+        }
     });
 
     unknownChIdx.forEach((aidx, idx) => {
         let entry = data[aidx];
-        const chNum = prefix + String(highestChannelNumber + (idx + 1)).padStart(calculatedHighestChannelNumber.toString().length, '0');
-        entry.channel_number = chNum;
-        entry['tvg-chno'] = String(chNum);
+        
+        if (channelBlock) {
+            let blockLength = String(channelBlock).length;
+            if (blockLength < String(calculatedHighestChannelNumber).length) {
+                blockLength = String(calculatedHighestChannelNumber).length;
+            }
+
+            entry.channel_number = entry['tvg-chno'] = String(Number(String(highestChannelNumber + (idx + 1)).padStart(blockLength, '0')) + channelBlock);
+        } else {
+            entry.channel_number = entry['tvg-chno'] = String(highestChannelNumber + idx + 1);
+
+        }
     });
 
 }
 
 function createM3u8Entry(entry: M3u8Entry, childNodeBase?: string): string {
-    const excludeIds = exclude_channels_prefix;
-    if (excludeIds.some(id => String(entry['tvg-id']).startsWith(id))) {
+    if (!disableExclusions && excludePrefixes.some(id => String(entry['tvg-id']).startsWith(id))) {
         return '';
     }
 

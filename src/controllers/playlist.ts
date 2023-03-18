@@ -99,12 +99,16 @@ function addChannelNumber(data: M3u8Entry[]): void {
 
     knownChIdx.forEach(idx => {
         let entry = data[idx];
-        entry.channel_number = prefix + String(entry['tvg-chno']).padStart(calculatedHighestChannelNumber.toString().length, '0');
+        const chNum = prefix + String(entry['tvg-chno']).padStart(calculatedHighestChannelNumber.toString().length, '0');
+        entry.channel_number = chNum;
+        entry['tvg-chno'] = String(chNum);
     });
 
     unknownChIdx.forEach((aidx, idx) => {
         let entry = data[aidx];
-        entry.channel_number = prefix + String(highestChannelNumber + (idx + 1)).padStart(calculatedHighestChannelNumber.toString().length, '0');
+        const chNum = prefix + String(highestChannelNumber + (idx + 1)).padStart(calculatedHighestChannelNumber.toString().length, '0');
+        entry.channel_number = chNum;
+        entry['tvg-chno'] = String(chNum);
     });
 
 }

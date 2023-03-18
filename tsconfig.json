@@ -5,15 +5,6 @@
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "outDir": "./dist",
-    "module": "commonjs",
-    "target": "es2016",
-    "baseUrl": "./src",
-    "paths": {
-      "@/*": ["*"]
-    }
-  },
-  "include": [
-    "src/**/*.ts",
-    "test/**/*.ts"
-  ]
+    "module": "commonjs"
+  }
 }

@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "npx tsc",
-    "start": "node dist/app.ts",
+    "start": "node dist/app.js",
     "dev": "concurrently \"npx tsc -w\" \"nodemon dist/app.js\"",
     "test": "cross-env NODE_ENV=test yarn run jest --testTimeout=5000 --verbose"
   },

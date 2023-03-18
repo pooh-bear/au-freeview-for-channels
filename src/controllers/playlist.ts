@@ -8,7 +8,7 @@ interface M3u8Entry {
 }
 
 
-const getPlaylist = async (city: string, baseUrl: string) => {
+const getPlaylist = async (city: string, baseUrl: string, childNodeBase?: string) => {
     try {
         if (city) {
             const playlistUrl = buildPlaylistUrl(city);
@@ -21,7 +21,7 @@ const getPlaylist = async (city: string, baseUrl: string) => {
 
             let processedPlaylist = `#EXTM3U x-tvg-url="${baseUrl}/epg/${city}"\n\n`;
 
-            const playlistEntries = entries.map(createM3u8Entry).join('');
+            const playlistEntries = entries.map(e => createM3u8Entry(e, childNodeBase)).join('');
 
             processedPlaylist += playlistEntries;
 
@@ -113,7 +113,7 @@ function addChannelNumber(data: M3u8Entry[]): void {
 
 }
 
-function createM3u8Entry(entry: M3u8Entry): string {
+function createM3u8Entry(entry: M3u8Entry, childNodeBase?: string): string {
     const excludeIds = exclude_channels_prefix;
     if (excludeIds.some(id => String(entry['tvg-id']).startsWith(id))) {
         return '';
@@ -126,8 +126,8 @@ function createM3u8Entry(entry: M3u8Entry): string {
         .map(([key, value]) => `${key.replace(/_/g, '-')}="${value}"`)
         .join(' ');
 
-    if (process.env.CHDVR_CHILDNODE) {
-        entry.url = `${process.env.CHDVR_CHILDNODE}/devices/ANY/channels/${entry.channel_number}/hls/stream.m3u8?codec=copy`;
+    if (childNodeBase) {
+        entry.url = `${childNodeBase}/devices/ANY/channels/${entry.channel_number}/hls/stream.m3u8?codec=copy`;
     }
     return `#EXTINF:-1 ${properties}, ${channelName}\n${entry.url}\n\n`;
 }

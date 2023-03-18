@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  au-freeview-for-channels:
+    container_name: au-freeview-for-channels
+    image: "gabepb/au-freeview-for-channels:latest"
+    ports:
+      - "11901:3000"
+    environment:
+      NODE_ENV: production

@@ -126,6 +126,9 @@ function createM3u8Entry(entry: M3u8Entry): string {
         .map(([key, value]) => `${key.replace(/_/g, '-')}="${value}"`)
         .join(' ');
 
+    if (process.env.CHDVR_CHILDNODE) {
+        entry.url = `${process.env.CHDVR_CHILDNODE}/devices/ANY/channels/${entry.channel_number}/hls/stream.m3u8?codec=copy`;
+    }
     return `#EXTINF:-1 ${properties}, ${channelName}\n${entry.url}\n\n`;
 }
 

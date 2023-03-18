@@ -5,6 +5,8 @@ AU Freeview for Channels is what is says on the tin - intended for use with [Cha
 
 Inspired and built on by the efforts & resources of the legendary [Matt Huisman](https://www.matthuisman.nz), this proxies relevant files from `i.mjh.nz` and transmogrifies them to make them fully work with Channels DVR.
 
+*NOTE*: This DOES NOT proxy the actual streaming feeds from the networks. You will need an Australian IP to access most of these channels.
+
 ## Installation
 Requires [Docker](http://docker.com).  
 Start via your preferred Docker container invocation method:

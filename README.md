@@ -35,28 +35,29 @@ services:
       NODE_ENV: production
 ```  
 Run `docker-compose up -d`.  
+(See [docker-compose.yml](https://github.com/pooh-bear/au-freeview-for-channels/blob/main/docker-compose.yml) for additional optional settings.)  
+  
 
-
-You should be able to access `http://localhost:11901`; it should return a JSON response of `{"up": true}`. If the Docker instance is not on the same machine as Channels DVR, you'll need to replace `localhost` with the IP of the Docker host for this guide.
+You should be able to access `http://127.0.0.1:11901`; it should return a JSON response of `{"up": true}`. If the Docker instance is not on the same machine as Channels DVR, you'll need to replace `127.0.0.1` with the IP of the Docker host for this guide.
 
 ## Usage
 Once you've spun up the service, add it to your Channels DVR as a Custom Channel.  
 
-- Select the city you wish to use with this Custom Channel, you can [check this page for supported cities](https://i.mjh.nz/au/).
-- Go to your Channels DVR (eg. http://localhost:8089) and go to Settings
+- Select the city you wish to use with this Custom Channel; you can [check this page for supported cities](https://i.mjh.nz/au/) or see a list of cities using `http://127.0.0.1:11901/helpers/cities`.
+- Go to your Channels DVR (eg. http://127.0.0.1:8089) and go to Settings
 - Under Basic Setup, in the X sources found, click the Add Source button
 - Choose Custom Channels
 - Use these settings:
   - Nickname: your choice eg. `Sydney Freeview`
   - Stream Format: HLS
   - Source: URL
-    - URL: `http://localhost:11901/playlist/SELECTED_CITY`, replacing `SELECTED_CITY` with eg. `Sydney`
+    - URL: `http://127.0.0.1:11901/playlist/SELECTED_CITY`, replacing `SELECTED_CITY` with eg. `Sydney`
   - Select Options:
     - Refresh URL daily
     - Prefer channel-number from M3U
     - No stream limit
   - XMLTV Guide Data:
-    - URL: `http://localhost:11901/epg/SELECTED_CITY`, again, replacing `SELECTED_CITY`
+    - URL: `http://127.0.0.1:11901/epg/SELECTED_CITY`, again, replacing `SELECTED_CITY`
     - Refresh Daily
   - Press Save
 
@@ -74,15 +75,15 @@ You can enable/define the Channel Block using the `CHANNEL_NUMBER_BLOCK` environ
 #### Channels without official LCNs
 Channel that don't have a provided LCN are incremented to the end of the highest LCN.  
 
-**Not using Channel Number Blocks**: eg. the highest LCN is `99`, the next non-LCN'd channel is `101`.
-**Using Channel Number Blocks**: eg. the highest LCN is `99` and is presented as `1099`, the next non-LCN'd channel is `1101`.
+**Not using Channel Number Blocks**: eg. the highest LCN is `99`, the next non-LCN'd channel is `101`.  
+**Using Channel Number Blocks**: eg. the highest LCN is `99` and is presented as `1099` with a `1000` block, the next non-LCN'd channel is `1101`.
 
-A future release will allow more granular control on how to specify particular channel numbers, eg. if you'd like to group the Channel Seven streaming channels under 1X7X.
+A future release will allow more granular control on how to specify particular channel numbers, eg. if you'd like to group the Channel Seven streaming channels under `1X7X`.
 
 ### Pop-up/Non-linear Channels
 Popup & non-linear channels, like channels with an MJH channel prefix of `mjh-7-cas` and `mjh-abc-90-seconds`, are not included in the channel list by default.  
 
-**To re-include them**: Define the `DISABLE_EXCLUSIONS` environment variable as `TRUE`.
+**To re-include them**: Define the `DISABLE_EXCLUSIONS` environment variable as `TRUE`.  
 **To re-specify excluded channels**: Define the `EXCLUDE_CHANNELS_PREFIXES` environment variable with the prefixes, separated by a comma, eg. `EXCLUDE_CHANNELS_PREFIXES=mjh-7-cas,mjh-abc-90-seconds,mjh-another-example`.
 
 ## Contributing

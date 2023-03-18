@@ -8,3 +8,7 @@ services:
       - "11901:3000"
     environment:
       NODE_ENV: production
+      ## Optional settings below ##
+      # CHANNEL_NUMBER_BLOCK: 1000 # Channel Number Block to prefix channel numbers with
+      # DISABLE_EXCLUSIONS: true # Disable excluded channel prefixes
+      # EXCLUDE_CHANNELS_PREFIXES: "mjh-7-cas,mjh-abc-90-seconds" # Comma separated list of channel prefixes to exclude

@@ -7,7 +7,8 @@ const router = express.Router();
 
 router.get('/:city', async (req, res) => {
     if (req.params.city) {
-        if ((await fetchCities()).includes(req.params.city)) {
+        const cities = await fetchCities();
+        if ((cities).includes(req.params.city)) {
             try {
                 const protocol = req.protocol;
                 const host = req.get('host');
@@ -20,7 +21,7 @@ router.get('/:city', async (req, res) => {
                 console.error(e);
                 res.status(500).send('Internal server error');
             }
-        } else res.status(404).send('City not found');
+        } else res.status(404).send('City not found. Available cities: ' + cities.join(', '));
     } else {
         res.status(400).send('Please provide a city name');
     }

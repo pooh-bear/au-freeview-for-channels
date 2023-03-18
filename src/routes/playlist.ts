@@ -12,7 +12,8 @@ router.get('/:city', async (req, res) => {
                 const protocol = req.protocol;
                 const host = req.get('host');
                 const baseUrl = `${protocol}://${host}`;
-                const playlist = await getPlaylist(req.params.city, baseUrl);
+                const childNodeBase = req.query.childNodeBase;
+                const playlist = childNodeBase? await getPlaylist(req.params.city, baseUrl, String(childNodeBase)) : await getPlaylist(req.params.city, baseUrl);
                 res.setHeader('Content-Type', 'application/vnd.apple.mpegurl');
                 res.send(playlist);
             } catch (e) {

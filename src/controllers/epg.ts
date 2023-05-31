@@ -26,7 +26,11 @@ const filterLcn = (content: string) => {
 }
 
 const buildEpgUrl = (city: string) => {
-    return `https://i.mjh.nz/au/${city}/epg.xml`;
+    if (city.toLowerCase() === 'foxtel') {
+        return `https://i.mjh.nz/Foxtel/epg.xml`;
+    } else {
+        return `https://i.mjh.nz/au/${city}/epg.xml`;
+    }
 }
 
 export { getEpg };

@@ -4,6 +4,7 @@ const disableExclusions = process.env.DISABLE_EXCLUSIONS && String(process.env.D
 const excludePrefixes = process.env.EXCLUDE_CHANNELS_PREFIXES ? process.env.EXCLUDE_CHANNELS_PREFIXES.split(',') : ['mjh-7-cas', 'mjh-abc-90-seconds'];
 
 const channelBlock = process.env.CHANNEL_NUMBER_BLOCK ? Number(process.env.CHANNEL_NUMBER_BLOCK) : null;
+const extraChannelBlock = process.env.EXTRA_CHANNEL_NUMBER_BLOCK ? Number(process.env.EXTRA_CHANNEL_NUMBER_BLOCK) : null;
 
 interface M3u8Entry {
     url: string;
@@ -116,8 +117,9 @@ function addChannelNumber(data: M3u8Entry[]): void {
 
     unknownChIdx.forEach((aidx, idx) => {
         let entry = data[aidx];
-        
-        if (channelBlock) {
+        if (extraChannelBlock) {
+            entry.channel_number = entry['tvg-chno'] = String(extraChannelBlock + idx);
+        } else if (channelBlock) {
             let blockLength = String(channelBlock).length;
             if (blockLength < String(calculatedHighestChannelNumber).length) {
                 blockLength = String(calculatedHighestChannelNumber).length;
@@ -126,7 +128,6 @@ function addChannelNumber(data: M3u8Entry[]): void {
             entry.channel_number = entry['tvg-chno'] = String(Number(String(highestChannelNumber + (idx + 1)).padStart(blockLength, '0')) + channelBlock);
         } else {
             entry.channel_number = entry['tvg-chno'] = String(highestChannelNumber + idx + 1);
-
         }
     });
 

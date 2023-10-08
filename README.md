@@ -72,6 +72,8 @@ When using Channel Number Blocks, you are able to essentially set a prefix for t
 
 You can enable/define the Channel Block using the `CHANNEL_NUMBER_BLOCK` environment variable, eg. `CHANNEL_NUMBER_BLOCK=2000`.
 
+Should you wish to have a separate Channel Block for extra/pop-up channels (that does not have a LCN), you can define that with an additional `EXTRA_CHANNEL_NUMBER_BLOCK` env var, eg. `EXTRA_CHANNEL_NUMBER_BLOCK=3000`.
+
 #### Channels without official LCNs
 Channel that don't have a provided LCN are incremented to the end of the highest LCN.  
 
